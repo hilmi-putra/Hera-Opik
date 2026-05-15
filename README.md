@@ -48,6 +48,52 @@ npm run dev
 - Wedding wishes
 - Language switcher (EN/ID)
 
+## Supabase Schema + RLS + Auth Setup
+
+1. Open Supabase SQL Editor, then run:
+
+```sql
+-- run all content from:
+-- supabase/schema.sql
+```
+
+2. Create first admin user from Supabase Auth:
+   - Go to Authentication -> Users -> Add user
+   - Use email/password for dashboard admin login
+
+3. Promote that user to admin role:
+
+```sql
+update public.profiles
+set role = 'admin'
+where id = 'USER_UUID_FROM_AUTH_USERS';
+```
+
+4. Test auth + RLS:
+   - Login from `/admin/login`
+   - Access `/admin` (must be admin)
+   - Public pages stay accessible without login
+
+### Included Supabase Tables
+
+- `profiles` (auth user profile + role)
+- `app_settings`
+- `events`
+- `rsvp_submissions`
+- `rsvp_submission_events`
+- `wedding_gift_accounts`
+- `gift_recipient_info`
+- `gift_recommendations`
+- `wedding_wishes`
+
+### Included Security
+
+- Row Level Security enabled on all tables
+- Public policies for read/submit guest-facing data
+- Admin-only policies for dashboard management
+- `is_admin()` helper for role-based policy checks
+- Safe gift claim RPC function (`claim_gift`)
+
 ## Deployment (Vercel)
 
 1. Import repository to Vercel
