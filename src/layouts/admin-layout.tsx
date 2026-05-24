@@ -1,17 +1,6 @@
 import { useMemo, useState } from "react";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
-import {
-  CalendarDays,
-  ExternalLink,
-  Gift,
-  Image as ImageIcon,
-  LayoutDashboard,
-  LogOut,
-  Menu,
-  MessageSquareHeart,
-  Settings,
-  Users,
-} from "lucide-react";
+import { CalendarDays, ExternalLink, Gift, Image as ImageIcon, LayoutDashboard, LogOut, Menu, MessageSquareHeart, Settings, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { useAuth } from "@/store/auth-context";
@@ -49,9 +38,7 @@ function AdminNav({ pathname, onNavigate }: AdminNavProps) {
             onClick={onNavigate}
             className={cn(
               "flex min-h-11 items-center gap-3 rounded-2xl px-3 text-sm font-semibold transition-colors",
-              active
-                ? "bg-[#822935] text-white shadow-sm shadow-[#822935]/10"
-                : "text-slate-600 hover:bg-[#F8E9E7] hover:text-[#822935]"
+              active ? "bg-[#822935] text-white shadow-sm shadow-[#822935]/10" : "text-slate-600 hover:bg-[#F8E9E7] hover:text-[#822935]",
             )}
           >
             <item.icon className="h-4 w-4 shrink-0" />
@@ -68,10 +55,7 @@ export function AdminLayout() {
   const location = useLocation();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  const currentPage = useMemo(
-    () => navigation.find((item) => isActivePath(location.pathname, item.href)) ?? navigation[0],
-    [location.pathname]
-  );
+  const currentPage = useMemo(() => navigation.find((item) => isActivePath(location.pathname, item.href)) ?? navigation[0], [location.pathname]);
 
   if (!user) {
     return <Navigate to="/admin/login" replace state={{ from: location }} />;
@@ -97,12 +81,7 @@ export function AdminLayout() {
             <p className="truncate text-sm font-semibold text-slate-900">{user.name}</p>
             <p className="truncate text-xs text-slate-500">{user.email}</p>
           </div>
-          <Button
-            type="button"
-            variant="ghost"
-            className="h-10 w-full justify-start rounded-2xl px-3 text-[#822935] hover:bg-white hover:text-[#822935]"
-            onClick={() => void signOut()}
-          >
+          <Button type="button" variant="ghost" className="h-10 w-full justify-start rounded-2xl px-3 text-[#822935] hover:bg-white hover:text-[#822935]" onClick={() => void signOut()}>
             <LogOut className="h-4 w-4" />
             Sign out
           </Button>
@@ -130,28 +109,16 @@ export function AdminLayout() {
         <header className="sticky top-0 z-30 border-b border-[#F8E9E7] bg-white/90 backdrop-blur">
           <div className="flex min-h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
             <div className="flex min-w-0 items-center gap-3">
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="h-10 w-10 rounded-2xl text-[#822935] hover:bg-[#F8E9E7] lg:hidden"
-                onClick={() => setMobileNavOpen(true)}
-              >
+              <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-2xl text-[#822935] hover:bg-[#F8E9E7] lg:hidden" onClick={() => setMobileNavOpen(true)}>
                 <Menu className="h-5 w-5" />
               </Button>
               <div className="min-w-0">
-                <h1 className="truncate font-sans text-lg font-bold tracking-tight text-slate-950 sm:text-xl">
-                  {currentPage.name}
-                </h1>
+                <h1 className="truncate font-sans text-lg font-bold tracking-tight text-slate-950 sm:text-xl">{currentPage.name}</h1>
                 <p className="hidden text-xs font-medium text-slate-500 sm:block">Kelola undangan digital dengan data yang rapi.</p>
               </div>
             </div>
 
-            <Button
-              asChild
-              variant="outline"
-              className="h-10 rounded-2xl border-[#F8E9E7] bg-white px-3 text-[#822935] hover:bg-[#F8E9E7] sm:px-4"
-            >
+            <Button asChild variant="outline" className="h-10 rounded-2xl border-[#F8E9E7] bg-white px-3 text-[#822935] hover:bg-[#F8E9E7] sm:px-4">
               <Link to="/">
                 <ExternalLink className="h-4 w-4" />
                 <span className="hidden sm:inline">View Website</span>

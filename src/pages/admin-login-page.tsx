@@ -52,12 +52,8 @@ export function AdminLoginPage() {
       <div className="mx-auto mt-20 grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[1fr_420px]">
         <div className="hidden lg:block">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#D65B4C]">Wedding Admin</p>
-          <h1 className="mt-4 max-w-xl font-sans text-5xl font-bold tracking-tight text-[#822935]">
-            Dashboard Wedding Admin
-          </h1>
-          <p className="mt-5 max-w-lg text-base leading-7 text-slate-600">
-            Masuk untuk mengatur RSVP, ucapan tamu, hadiah, galeri, dan konfigurasi acara dari satu panel yang rapi.
-          </p>
+          <h1 className="mt-4 max-w-xl font-sans text-5xl font-bold tracking-tight text-[#822935]">Dashboard Wedding Admin</h1>
+          <p className="mt-5 max-w-lg text-base leading-7 text-slate-600">Masuk untuk mengatur RSVP, ucapan tamu, hadiah, galeri, dan konfigurasi acara dari satu panel yang rapi.</p>
         </div>
 
         <Card className="border-[#F8E9E7] bg-white shadow-xl shadow-[#822935]/5">
