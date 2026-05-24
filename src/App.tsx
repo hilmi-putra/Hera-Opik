@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { PublicLayout } from "@/layouts/public-layout";
 import { AdminLayout } from "@/layouts/admin-layout";
 import { LandingPage } from "@/pages/landing-page";
@@ -13,11 +13,14 @@ import { GalleryPage } from "@/pages/admin/gallery-page";
 import { MusicPlayer } from "@/components/music-player";
 
 export default function App() {
+  const location = useLocation();
+  const showMusicPlayer = !location.pathname.startsWith("/admin");
+
   return (
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        
+
         <Route element={<PublicLayout />}>
           <Route path="/admin/login" element={<AdminLoginPage />} />
         </Route>
@@ -31,10 +34,10 @@ export default function App() {
           <Route path="/admin/gifts" element={<GiftsPage />} />
           <Route path="/admin/gallery" element={<GalleryPage />} />
         </Route>
-        
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      <MusicPlayer />
+      {showMusicPlayer && <MusicPlayer />}
     </>
   );
 }

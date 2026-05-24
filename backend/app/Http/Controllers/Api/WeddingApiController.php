@@ -48,7 +48,7 @@ class WeddingApiController extends Controller
                     'price' => (float) $gift->price,
                     'totalStock' => $gift->total_stock,
                     'purchasedCount' => $gift->purchased_count,
-                    'image' => $gift->image ? asset('storage/' . $gift->image) : null,
+                    'image' => $this->resolveGiftImage($gift->image),
                     'color' => $gift->color,
                     'link' => $gift->purchase_link,
                 ];
@@ -94,5 +94,18 @@ class WeddingApiController extends Controller
                 'date' => $rsvp->created_at->format('d M Y'),
             ]),
         ]);
+    }
+
+    private function resolveGiftImage(?string $image): ?string
+    {
+        if (!$image) {
+            return null;
+        }
+
+        if (str_starts_with($image, 'http') || str_starts_with($image, '/')) {
+            return $image;
+        }
+
+        return asset('storage/' . $image);
     }
 }

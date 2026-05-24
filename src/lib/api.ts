@@ -79,7 +79,9 @@ export type AdminWish = {
 export type AdminGift = {
   id: number;
   product_name: string;
+  image: string | null;
   description: string | null;
+  purchase_link: string | null;
   price: number;
   color: string;
   total_stock: number;
@@ -131,6 +133,32 @@ export type DashboardPayload = {
   };
   recentRsvps: AdminRsvp[];
   recentWishes: AdminWish[];
+};
+
+export type AdminRsvpPayload = {
+  guest_name: string;
+  phone_number: string | null;
+  attendance_status: "attending" | "not_attending";
+  events: string[] | null;
+  total_attendees: number;
+  notes: string | null;
+};
+
+export type AdminWishPayload = {
+  guest_name: string;
+  message: string;
+  attendance_status: "attending" | "not_attending";
+};
+
+export type AdminGiftPayload = {
+  product_name: string;
+  image: string | null;
+  description: string | null;
+  purchase_link: string | null;
+  price: number;
+  color: string;
+  total_stock: number;
+  purchased_count?: number;
 };
 
 export const adminTokenStorage = {
@@ -190,7 +218,7 @@ export const api = {
       claimed_phone: FormDataEntryValue | null;
       claimed_email: FormDataEntryValue | null;
       quantity: number;
-    }
+    },
   ) => apiRequest(`/gifts/${giftId}/claim`, { method: "POST", body: payload }),
   login: (email: string, password: string) =>
     apiRequest<AdminLoginResponse>("/admin/login", {
@@ -201,8 +229,67 @@ export const api = {
   logout: () => apiRequest("/admin/logout", { method: "POST", auth: true }),
   dashboard: () => apiRequest<DashboardPayload>("/admin/dashboard", { auth: true }),
   adminRsvps: () => apiRequest<AdminRsvp[]>("/admin/rsvps", { auth: true }),
+  createAdminRsvp: (payload: AdminRsvpPayload) =>
+    apiRequest<AdminRsvp>("/admin/rsvps", {
+      method: "POST",
+      auth: true,
+      body: payload,
+    }),
+  updateAdminRsvp: (id: number, payload: AdminRsvpPayload) =>
+    apiRequest<AdminRsvp>(`/admin/rsvps/${id}`, {
+      method: "PUT",
+      auth: true,
+      body: payload,
+    }),
+  deleteAdminRsvp: (id: number) =>
+    apiRequest(`/admin/rsvps/${id}`, {
+      method: "DELETE",
+      auth: true,
+    }),
   adminWishes: () => apiRequest<AdminWish[]>("/admin/wishes", { auth: true }),
+  createAdminWish: (payload: AdminWishPayload) =>
+    apiRequest<AdminWish>("/admin/wishes", {
+      method: "POST",
+      auth: true,
+      body: payload,
+    }),
+  updateAdminWish: (id: number, payload: AdminWishPayload) =>
+    apiRequest<AdminWish>(`/admin/wishes/${id}`, {
+      method: "PUT",
+      auth: true,
+      body: payload,
+    }),
+  deleteAdminWish: (id: number) =>
+    apiRequest(`/admin/wishes/${id}`, {
+      method: "DELETE",
+      auth: true,
+    }),
   adminGifts: () => apiRequest<AdminGift[]>("/admin/gifts", { auth: true }),
+  createAdminGift: (payload: AdminGiftPayload | FormData) =>
+    apiRequest<AdminGift>("/admin/gifts", {
+      method: "POST",
+      auth: true,
+      body: payload,
+    }),
+  updateAdminGift: (id: number, payload: AdminGiftPayload | FormData) =>
+    apiRequest<AdminGift>(`/admin/gifts/${id}`, {
+      method: payload instanceof FormData ? "POST" : "PUT",
+      auth: true,
+      body:
+        payload instanceof FormData
+          ? (() => {
+              const formData = new FormData();
+              payload.forEach((value, key) => formData.append(key, value));
+              formData.append("_method", "PUT");
+              return formData;
+            })()
+          : payload,
+    }),
+  deleteAdminGift: (id: number) =>
+    apiRequest(`/admin/gifts/${id}`, {
+      method: "DELETE",
+      auth: true,
+    }),
   adminEvents: () => apiRequest<AdminEvent[]>("/admin/events", { auth: true }),
   adminGallery: () => apiRequest<AdminGalleryItem[]>("/admin/gallery", { auth: true }),
   weddingConfig: () => apiRequest<WeddingConfig>("/admin/config", { auth: true }),

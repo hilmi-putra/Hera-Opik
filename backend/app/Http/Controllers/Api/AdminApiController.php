@@ -93,6 +93,44 @@ class AdminApiController extends Controller
         ]);
     }
 
+    public function storeRsvp(Request $request): JsonResponse
+    {
+        $this->user($request);
+
+        $rsvp = Rsvp::create($this->validateRsvpPayload($request));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'RSVP berhasil ditambahkan.',
+            'data' => $this->serializeRsvp($rsvp),
+        ], 201);
+    }
+
+    public function updateRsvp(Request $request, Rsvp $rsvp): JsonResponse
+    {
+        $this->user($request);
+
+        $rsvp->update($this->validateRsvpPayload($request));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'RSVP berhasil diperbarui.',
+            'data' => $this->serializeRsvp($rsvp->fresh()),
+        ]);
+    }
+
+    public function destroyRsvp(Request $request, Rsvp $rsvp): JsonResponse
+    {
+        $this->user($request);
+
+        $rsvp->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'RSVP berhasil dihapus.',
+        ]);
+    }
+
     public function wishes(Request $request): JsonResponse
     {
         $this->user($request);
@@ -108,24 +146,114 @@ class AdminApiController extends Controller
         ]);
     }
 
+    public function storeWish(Request $request): JsonResponse
+    {
+        $this->user($request);
+
+        $data = $this->validateWishPayload($request);
+        $rsvp = Rsvp::create([
+            'guest_name' => $data['guest_name'],
+            'attendance_status' => $data['attendance_status'],
+            'events' => null,
+            'total_attendees' => 1,
+            'notes' => $data['message'],
+            'phone_number' => null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Ucapan berhasil ditambahkan.',
+            'data' => $this->serializeWish($rsvp),
+        ], 201);
+    }
+
+    public function updateWish(Request $request, Rsvp $rsvp): JsonResponse
+    {
+        $this->user($request);
+
+        $data = $this->validateWishPayload($request);
+        $rsvp->update([
+            'guest_name' => $data['guest_name'],
+            'attendance_status' => $data['attendance_status'],
+            'notes' => $data['message'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Ucapan berhasil diperbarui.',
+            'data' => $this->serializeWish($rsvp->fresh()),
+        ]);
+    }
+
+    public function destroyWish(Request $request, Rsvp $rsvp): JsonResponse
+    {
+        $this->user($request);
+
+        $rsvp->update(['notes' => null]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Ucapan berhasil dihapus.',
+        ]);
+    }
+
     public function gifts(Request $request): JsonResponse
     {
         $this->user($request);
 
         return response()->json([
             'success' => true,
-            'data' => GiftRecommendation::latest()->get()->map(fn (GiftRecommendation $gift) => [
-                'id' => $gift->id,
-                'product_name' => $gift->product_name,
-                'description' => $gift->description,
-                'price' => (float) $gift->price,
-                'color' => $gift->color,
-                'total_stock' => $gift->total_stock,
-                'purchased_count' => $gift->purchased_count,
-                'availability_status' => $gift->availability_status,
-                'claimed_by' => $gift->claimed_by,
-                'created_at' => $gift->created_at?->toISOString(),
-            ])->values(),
+            'data' => GiftRecommendation::latest()->get()->map(fn (GiftRecommendation $gift) => $this->serializeGift($gift))->values(),
+        ]);
+    }
+
+    public function storeGift(Request $request): JsonResponse
+    {
+        $this->user($request);
+
+        $data = $this->validateGiftPayload($request);
+        $gift = GiftRecommendation::create([
+            ...$data,
+            'purchased_count' => $data['purchased_count'] ?? 0,
+            'availability_status' => 'available',
+            'is_claimed' => false,
+        ]);
+        $gift->updateAvailabilityStatus();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hadiah berhasil ditambahkan.',
+            'data' => $this->serializeGift($gift->fresh()),
+        ], 201);
+    }
+
+    public function updateGift(Request $request, GiftRecommendation $gift): JsonResponse
+    {
+        $this->user($request);
+
+        $data = $this->validateGiftPayload($request);
+        $gift->update([
+            ...$data,
+            'purchased_count' => $data['purchased_count'] ?? $gift->purchased_count,
+        ]);
+        $gift->updateAvailabilityStatus();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hadiah berhasil diperbarui.',
+            'data' => $this->serializeGift($gift->fresh()),
+        ]);
+    }
+
+    public function destroyGift(Request $request, GiftRecommendation $gift): JsonResponse
+    {
+        $this->user($request);
+
+        $gift->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hadiah berhasil dihapus.',
         ]);
     }
 
@@ -250,6 +378,88 @@ class AdminApiController extends Controller
             'attendance_status' => $rsvp->attendance_status,
             'created_at' => $rsvp->created_at?->toISOString(),
         ];
+    }
+
+    private function serializeGift(GiftRecommendation $gift): array
+    {
+        return [
+            'id' => $gift->id,
+            'product_name' => $gift->product_name,
+            'image' => $this->resolveGiftImage($gift->image),
+            'description' => $gift->description,
+            'purchase_link' => $gift->purchase_link,
+            'price' => (float) $gift->price,
+            'color' => $gift->color,
+            'total_stock' => $gift->total_stock,
+            'purchased_count' => $gift->purchased_count,
+            'availability_status' => $gift->availability_status,
+            'claimed_by' => $gift->claimed_by,
+            'created_at' => $gift->created_at?->toISOString(),
+        ];
+    }
+
+    private function resolveGiftImage(?string $image): ?string
+    {
+        if (!$image) {
+            return null;
+        }
+
+        if (str_starts_with($image, 'http') || str_starts_with($image, '/')) {
+            return $image;
+        }
+
+        return asset('storage/' . $image);
+    }
+
+    private function validateRsvpPayload(Request $request): array
+    {
+        return $request->validate([
+            'guest_name' => ['required', 'string', 'max:255'],
+            'phone_number' => ['nullable', 'string', 'max:20'],
+            'attendance_status' => ['required', 'in:attending,not_attending'],
+            'events' => ['nullable', 'array'],
+            'events.*' => ['in:akad_nikah,resepsi'],
+            'total_attendees' => ['required', 'integer', 'min:1', 'max:10'],
+            'notes' => ['nullable', 'string', 'max:1000'],
+        ]);
+    }
+
+    private function validateWishPayload(Request $request): array
+    {
+        return $request->validate([
+            'guest_name' => ['required', 'string', 'max:255'],
+            'message' => ['required', 'string', 'max:1000'],
+            'attendance_status' => ['required', 'in:attending,not_attending'],
+        ]);
+    }
+
+    private function validateGiftPayload(Request $request): array
+    {
+        $rules = [
+            'product_name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:500'],
+            'purchase_link' => ['nullable', 'string', 'max:500'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'color' => ['nullable', 'string', 'max:7'],
+            'total_stock' => ['required', 'integer', 'min:1'],
+            'purchased_count' => ['nullable', 'integer', 'min:0', 'lte:total_stock'],
+        ];
+
+        $rules['image'] = $request->hasFile('image')
+            ? ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048']
+            : ['nullable', 'string', 'max:500'];
+
+        $data = $request->validate($rules);
+
+        $data['color'] = ($data['color'] ?? null) ?: '#D65B4C';
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('gifts', 'public');
+        } elseif (!array_key_exists('image', $data) || $data['image'] === '') {
+            unset($data['image']);
+        }
+
+        return $data;
     }
 
     private function eventsPayload(): array

@@ -50,12 +50,8 @@ export function MusicPlayer() {
 
   return (
     <>
-      <audio
-        ref={audioRef}
-        src="/music/2112 - Reality Club (Official Lyric Video).mp3"
-        loop
-      />
-      
+      <audio ref={audioRef} src="/music/2112 - Reality Club (Official Lyric Video).mp3" loop />
+
       <div className="fixed bottom-6 left-6 z-[100] flex items-center justify-center">
         <motion.div
           onClick={togglePlay}
@@ -76,12 +72,13 @@ export function MusicPlayer() {
             className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#1a1a1a] shadow-2xl flex items-center justify-center relative overflow-hidden border-2 border-black/20"
           >
             {/* Vinyl Grooves Effect */}
-            <div className="absolute inset-0 rounded-full opacity-30"
+            <div
+              className="absolute inset-0 rounded-full opacity-30"
               style={{
-                background: "repeating-radial-gradient(circle, transparent, transparent 2px, rgba(255,255,255,0.05) 3px, transparent 4px)"
+                background: "repeating-radial-gradient(circle, transparent, transparent 2px, rgba(255,255,255,0.05) 3px, transparent 4px)",
               }}
             />
-            
+
             {/* Center Label */}
             <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[#842434] border-2 border-[#C6A633] flex items-center justify-center z-10">
               <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/20" />
@@ -92,16 +89,13 @@ export function MusicPlayer() {
           </motion.div>
 
           {/* Tone Arm (Stylus) */}
-          <motion.div
-            animate={{ rotate: isPlaying ? 25 : 0 }}
-            className="absolute -top-1 -right-1 w-8 h-8 pointer-events-none origin-top-right z-20"
-          >
-             <div className="w-1 h-10 bg-gradient-to-b from-slate-400 to-slate-600 rounded-full rotate-[120deg] origin-top translate-x-4 -translate-y-2 shadow-sm" />
+          <motion.div animate={{ rotate: isPlaying ? 25 : 0 }} className="absolute -top-1 -right-1 w-8 h-8 pointer-events-none origin-top-right z-20">
+            <div className="w-1 h-10 bg-gradient-to-b from-slate-400 to-slate-600 rounded-full rotate-[120deg] origin-top translate-x-4 -translate-y-2 shadow-sm" />
           </motion.div>
 
           {/* Status Indicator Overlays */}
           <div className="absolute -top-2 -right-2 bg-[#C6A633] text-[#842434] w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center shadow-lg border-2 border-white z-30 group-hover:scale-110 transition-transform">
-             {isPlaying ? <Pause className="w-3 h-3 md:w-4 md:h-4 fill-current" /> : <Play className="w-3 h-3 md:w-4 md:h-4 ml-0.5 fill-current" />}
+            {isPlaying ? <Pause className="w-3 h-3 md:w-4 md:h-4 fill-current" /> : <Play className="w-3 h-3 md:w-4 md:h-4 ml-0.5 fill-current" />}
           </div>
 
           {/* Animated Music Notes when playing */}
