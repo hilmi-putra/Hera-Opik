@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { supabase } from "@/lib/supabase";
+import { api } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -26,12 +26,8 @@ export function ConfigPage() {
   const queryClient = useQueryClient();
 
   const { data: config, isLoading } = useQuery({
-    queryKey: ['wedding_config'],
-    queryFn: async () => {
-      const { data, error } = await supabase.from('wedding_config').select('*').limit(1).maybeSingle();
-      if (error) throw error;
-      return data;
-    }
+    queryKey: ["wedding-config"],
+    queryFn: api.weddingConfig,
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,16 +47,10 @@ export function ConfigPage() {
 
   const mutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      if (config?.id) {
-        const { error } = await supabase.from('wedding_config').update(values).eq('id', config.id);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from('wedding_config').insert([values]);
-        if (error) throw error;
-      }
+      await api.updateWeddingConfig(values);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['wedding_config'] });
+      queryClient.invalidateQueries({ queryKey: ["wedding-config"] });
       toast.success("Configuration saved successfully.");
     },
     onError: (error) => {

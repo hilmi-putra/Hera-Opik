@@ -20,7 +20,7 @@ class DashboardController extends Controller
     {
         $rsvpStats = $this->rsvpService->getStatistics();
         $giftStats = $this->giftService->getStatistics();
-        $recentRsvps = $this->rsvpService->getRecent(5);
+        $recentRsvps = $this->rsvpService->getPaginated([], 5);
 
         return view('admin.dashboard', compact('rsvpStats', 'giftStats', 'recentRsvps'));
     }

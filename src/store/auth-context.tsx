@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
-import type { AuthState, AppRole } from "@/types/auth";
-import { supabase } from "@/lib/supabase";
+import { api, adminTokenStorage } from "@/lib/api";
+import type { AuthState } from "@/types/auth";
 
 interface AuthContextValue extends AuthState {
   signInWithPassword: (email: string, password: string) => Promise<{ error?: string }>;
@@ -10,55 +10,27 @@ interface AuthContextValue extends AuthState {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-async function fetchRole(userId: string): Promise<AppRole> {
-  const { data, error } = await supabase.from("profiles").select("role").eq("id", userId).single();
-  if (error) return "guest";
-  return (data?.role as AppRole) ?? "guest";
-}
-
 export function AuthProvider({ children }: PropsWithChildren) {
   const [state, setState] = useState<AuthState>({ user: null, role: null, loading: true });
 
+  const loadCurrentUser = async () => {
+    const token = adminTokenStorage.get();
+    if (!token) {
+      setState({ user: null, role: null, loading: false });
+      return;
+    }
+
+    try {
+      const user = await api.me();
+      setState({ user, role: user.role, loading: false });
+    } catch {
+      adminTokenStorage.clear();
+      setState({ user: null, role: null, loading: false });
+    }
+  };
+
   useEffect(() => {
-    const bootstrap = async () => {
-      try {
-        const { data, error } = await supabase.auth.getSession();
-        if (error) {
-          console.error("Supabase Auth Error:", error.message);
-        }
-        
-        const user = data?.session?.user ?? null;
-        if (!user) {
-          setState({ user: null, role: null, loading: false });
-          return;
-        }
-        
-        const role = await fetchRole(user.id);
-        setState({ user, role, loading: false });
-      } catch (err) {
-        console.error("Unexpected Auth Error:", err);
-        setState({ user: null, role: null, loading: false });
-      }
-    };
-
-    bootstrap();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_, session) => {
-      try {
-        const user = session?.user ?? null;
-        if (!user) {
-          setState({ user: null, role: null, loading: false });
-          return;
-        }
-        const role = await fetchRole(user.id);
-        setState({ user, role, loading: false });
-      } catch (err) {
-        console.error("Unexpected Auth State Change Error:", err);
-        setState({ user: null, role: null, loading: false });
-      }
-    });
-
-    return () => listener.subscription.unsubscribe();
+    loadCurrentUser();
   }, []);
 
   const value = useMemo<AuthContextValue>(
@@ -66,22 +38,25 @@ export function AuthProvider({ children }: PropsWithChildren) {
       ...state,
       signInWithPassword: async (email, password) => {
         try {
-          const { error } = await supabase.auth.signInWithPassword({ email, password });
-          if (error) return { error: error.message };
+          const { token, user } = await api.login(email, password);
+          adminTokenStorage.set(token);
+          setState({ user, role: user.role, loading: false });
           return {};
         } catch (err: any) {
-          console.error("Sign in error:", err);
-          return { error: err?.message || "An unexpected error occurred during sign in." };
+          return { error: err?.message || "Login gagal. Silakan coba lagi." };
         }
       },
       signOut: async () => {
-        await supabase.auth.signOut();
+        try {
+          await api.logout();
+        } catch {
+          // Local token cleanup is still required when the backend is unavailable.
+        } finally {
+          adminTokenStorage.clear();
+          setState({ user: null, role: null, loading: false });
+        }
       },
-      refreshRole: async () => {
-        if (!state.user) return;
-        const role = await fetchRole(state.user.id);
-        setState((prev) => ({ ...prev, role }));
-      },
+      refreshRole: loadCurrentUser,
     }),
     [state]
   );

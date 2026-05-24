@@ -1,5 +1,4 @@
 import { FloralDecor } from "../ui/FloralDecor";
-import { ScallopDivider } from "../ui/ScallopDivider";
 
 export function Hero() {
   return (

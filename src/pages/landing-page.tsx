@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MapPin, ChevronDown, Copy } from "lucide-react";
+import { MapPin, Copy, ExternalLink } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { api } from "@/lib/api";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -142,7 +143,7 @@ function StoryCard({ story }: { story: LoveStoryItem }) {
   );
 }
 
-function AnimatedStarburst({
+function SpinningFlower({
   className = "",
   color,
   size,
@@ -161,7 +162,7 @@ function AnimatedStarburst({
     <motion.span
       aria-hidden="true"
       className={`pointer-events-none absolute inline-flex items-center justify-center ${className}`}
-      style={{ width: size, height: size, color }}
+      style={{ width: size, height: size, color, fontSize: size }}
       initial={false}
       animate={{
         rotate: [rotate, rotate + 360],
@@ -175,15 +176,48 @@ function AnimatedStarburst({
         ease: "linear",
       }}
     >
-      <svg viewBox="0 0 100 100" className={size ? "h-full w-full" : "h-[1em] w-[1em]"} fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M50 5L58 28L79 14L72 39L96 43L74 55L90 77L64 70L50 95L39 70L14 85L28 60L4 52L30 42L18 17L42 30L50 5Z"
-          fill="currentColor"
-        />
-        <path d="M82 8L86 17L95 20L86 23L82 32L78 23L69 20L78 17L82 8Z" fill="currentColor" fillOpacity="0.62" />
-        <path d="M17 72L20 80L28 83L20 86L17 94L14 86L6 83L14 80L17 72Z" fill="currentColor" fillOpacity="0.5" />
-      </svg>
+      <span className="block font-serif leading-none">✽</span>
     </motion.span>
+  );
+}
+
+function SaveDateSunflower({
+  side,
+  className = "",
+}: {
+  side: "left" | "right";
+  className?: string;
+}) {
+  const isLeft = side === "left";
+
+  return (
+    <svg
+      viewBox="0 0 80 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      {isLeft ? (
+        <>
+          <path d="M 40,50 Q 50,80 35,100" fill="none" stroke="#1A4A38" strokeWidth="4" strokeLinecap="round" />
+          <path d="M 42,70 Q 20,75 15,60 Q 25,50 40,60" fill="#6A994E" stroke="#1A4A38" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M 45,85 Q 65,90 70,75 Q 60,65 40,75" fill="#6A994E" stroke="#1A4A38" strokeWidth="1.5" strokeLinejoin="round" />
+        </>
+      ) : (
+        <>
+          <path d="M 40,50 Q 30,80 45,100" fill="none" stroke="#1A4A38" strokeWidth="4" strokeLinecap="round" />
+          <path d="M 38,70 Q 60,75 65,60 Q 55,50 40,60" fill="#6A994E" stroke="#1A4A38" strokeWidth="1.5" strokeLinejoin="round" />
+          <path d="M 35,85 Q 15,90 10,75 Q 20,65 40,75" fill="#6A994E" stroke="#1A4A38" strokeWidth="1.5" strokeLinejoin="round" />
+        </>
+      )}
+      <g transform="translate(40, 40)">
+        {Array.from({ length: 12 }).map((_, index) => (
+          <path key={index} transform={`rotate(${index * 30})`} d="M 0,0 C 10,-15 10,-30 0,-35 C -10,-30 -10,-15 0,0" fill="#EED372" stroke="#B88A44" strokeWidth="1" />
+        ))}
+        <circle r="14" fill="#5B3A29" />
+        <circle r="10" fill="#4A2A1A" stroke="#3A2216" strokeWidth="1" strokeDasharray="2 2" />
+      </g>
+    </svg>
   );
 }
 
@@ -219,7 +253,8 @@ const toGoogleCalendarDate = (date: Date) => date.toISOString().replace(/[-:]/g,
 
 const getRemainingGiftStock = (gift: Pick<GiftItem, "totalStock" | "purchasedCount">) => Math.max(gift.totalStock - gift.purchasedCount, 0);
 
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/v1";
+const DEFAULT_GIFT_IMAGE = "/images/CMZ_4069.jpg";
+const getGiftImage = (image: string | null | undefined) => image?.trim() || DEFAULT_GIFT_IMAGE;
 
 interface GiftItem {
   id: number;
@@ -243,17 +278,26 @@ interface WishItem {
 
 const BANK_ACCOUNTS = [
   {
-    id: "danamon",
-    name: "BANK DANAMON",
-    code: "011",
-    accountNumber: "10461670343",
+    id: "dana",
+    label: "Dana",
+    name: "DANA",
+    accountNumber: "089655986299",
     accountName: "Hera Nurimani"
   },
   {
-    id: "bca",
-    name: "BANK BCA",
-    code: "014",
-    accountNumber: "1234567890",
+    id: "mandiri",
+    label: "Mandiri",
+    name: "BANK MANDIRI",
+    code: "008",
+    accountNumber: "1310024879308",
+    accountName: "Hera Nurimani"
+  },
+  {
+    id: "bri",
+    label: "BRI",
+    name: "BANK BRI",
+    code: "002",
+    accountNumber: "089001050754533",
     accountName: "Hera Nurimani"
   }
 ];
@@ -271,7 +315,7 @@ export function LandingPage() {
     location: "Duta Family Estate, Sindangpakuon, Kec. Cimanggung, Kabupaten Sumedang, Jawa Barat 45364",
   }).toString()}`;
 
-  const [selectedBankId, setSelectedBankId] = useState("danamon");
+  const [selectedBankId, setSelectedBankId] = useState("dana");
   const [isOpen, setIsOpen] = useState(false);
   const [isComing, setIsComing] = useState<boolean | null>(null);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
@@ -367,14 +411,11 @@ export function LandingPage() {
 
   const fetchGifts = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/gifts`);
-      const json = await res.json();
-      if (json.success) {
-        setGiftRecommendations(json.data.map((g: any) => ({
-          ...g,
-          image: g.image || "/images/CMZ_4069.jpg",
-        })));
-      }
+      const gifts = await api.getGifts();
+      setGiftRecommendations(gifts.map((gift) => ({
+        ...gift,
+        image: getGiftImage(gift.image),
+      })));
     } catch {
       console.warn("Backend not available, gifts will be empty.");
     }
@@ -382,9 +423,8 @@ export function LandingPage() {
 
   const fetchWishes = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/wishes`);
-      const json = await res.json();
-      if (json.success) setWishes(json.data);
+      const wishes = await api.getWishes();
+      setWishes(wishes);
     } catch {
       console.warn("Could not fetch wishes.");
     }
@@ -401,27 +441,18 @@ export function LandingPage() {
     if (selectedEvents.includes("Akad Nikah")) events.push("akad_nikah");
     if (selectedEvents.includes("Resepsi")) events.push("resepsi");
     try {
-      const res = await fetch(`${API_URL}/rsvp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          guest_name: rsvpName,
-          attendance_status: isComing ? "attending" : "not_attending",
-          events: isComing ? events : null,
-          total_attendees: isComing ? guestCount : 1,
-          phone_number: rsvpPhone || null,
-          notes: rsvpNotes || null,
-        }),
+      await api.submitRsvp({
+        guest_name: rsvpName,
+        attendance_status: isComing ? "attending" : "not_attending",
+        events: isComing ? events : null,
+        total_attendees: isComing ? guestCount : 1,
+        phone_number: rsvpPhone || null,
+        notes: rsvpNotes || null,
       });
-      const json = await res.json();
-      if (json.success) {
-        setRsvpSuccess(true);
-        setRsvpMessage("Terima kasih! RSVP Anda berhasil dikirim.");
-        setShowRsvpModal(false);
-        fetchWishes();
-      } else {
-        setRsvpMessage(json.message || "Terjadi kesalahan.");
-      }
+      setRsvpSuccess(true);
+      setRsvpMessage("Terima kasih! RSVP Anda berhasil dikirim.");
+      setShowRsvpModal(false);
+      fetchWishes();
     } catch {
       setRsvpMessage("Gagal mengirim RSVP. Coba lagi nanti.");
     } finally {
@@ -450,24 +481,15 @@ export function LandingPage() {
     const form = e.currentTarget;
     const formData = new FormData(form);
     try {
-      const res = await fetch(`${API_URL}/gifts/${selectedGiftForm.id}/claim`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          claimed_by: formData.get("claimed_by"),
-          claimed_phone: formData.get("claimed_phone"),
-          claimed_email: formData.get("claimed_email"),
-          quantity: requestedQuantity,
-        }),
+      await api.claimGift(selectedGiftForm.id, {
+        claimed_by: formData.get("claimed_by"),
+        claimed_phone: formData.get("claimed_phone"),
+        claimed_email: formData.get("claimed_email"),
+        quantity: requestedQuantity,
       });
-      const json = await res.json();
-      if (json.success) {
-        setSelectedGiftForm(null);
-        setAlertInfo({ title: "Berhasil", message: "Konfirmasi pembelian berhasil!" });
-        fetchGifts();
-      } else {
-        setAlertInfo({ title: "Gagal", message: json.message || "Gagal mengkonfirmasi.", variant: "destructive" });
-      }
+      setSelectedGiftForm(null);
+      setAlertInfo({ title: "Berhasil", message: "Konfirmasi pembelian berhasil!" });
+      fetchGifts();
     } catch {
       setAlertInfo({ title: "Error", message: "Gagal menghubungi server.", variant: "destructive" });
     } finally {
@@ -604,7 +626,7 @@ export function LandingPage() {
 
             {/* Text Overlay for Left Panel */}
             <div className="relative z-10 w-full h-full flex flex-col justify-start px-8 lg:px-16 pb-20 lg:justify-center">
-              <div className="mt-[10vh] mb-0 text-white text-center drop-shadow-xl flex flex-col items-center sm:mt-[12vh] lg:mt-auto lg:mb-16">
+              <div className="mt-[7vh] mb-0 text-white text-center drop-shadow-xl flex flex-col items-center sm:mt-[9vh] lg:mt-auto lg:mb-16">
                 <p className="font-sans uppercase tracking-[0.2em] text-xs md:text-sm mb-4 font-bold">The Wedding Of</p>
                 <h1 className="font-serif text-6xl md:text-7xl lg:text-8xl mb-4 leading-none">
                   Hera &<br />
@@ -626,10 +648,10 @@ export function LandingPage() {
               )}
             </div>
 
-            {/* Animated Starbursts */}
-            <AnimatedStarburst className="top-[15%] left-[10%] opacity-95 drop-shadow-md" color="#F75B42" size={78} rotate={12} />
-            <AnimatedStarburst className="top-[30%] right-[15%] opacity-90 drop-shadow-md" color="#F4C848" size={58} delay={0.6} duration={6.2} rotate={-12} />
-            <AnimatedStarburst className="bottom-[25%] left-[8%] opacity-95 drop-shadow-md" color="#F75B42" size={54} delay={1.1} duration={7.4} rotate={45} />
+            {/* Random Spinning Flowers (More Visible) */}
+            <SpinningFlower className="top-[16%] -left-3 opacity-95 drop-shadow-md lg:left-[10%] lg:top-[15%]" color="#F75B42" size={isMobile ? 58 : 78} rotate={12} />
+            <SpinningFlower className="top-[25%] -right-3 opacity-90 drop-shadow-md lg:right-[15%] lg:top-[30%]" color="#F4C848" size={isMobile ? 44 : 58} delay={0.6} duration={6.2} rotate={-12} />
+            <SpinningFlower className="bottom-[28%] left-[7%] opacity-95 drop-shadow-md lg:bottom-[25%] lg:left-[8%]" color="#F75B42" size={isMobile ? 42 : 54} delay={1.1} duration={7.4} rotate={45} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -662,45 +684,29 @@ export function LandingPage() {
               dangerouslySetInnerHTML={{
                 __html: `
               @keyframes weddingInviteFlowerLeft {
-                0%, 100% { transform: rotate(-8deg) translateY(0); }
-                50% { transform: rotate(-2deg) translateY(-8px); }
+                0%, 100% { transform: translateX(-40%) rotate(-8deg); }
+                50% { transform: translateX(-40%) rotate(-2deg); }
               }
               @keyframes weddingInviteFlowerRight {
-                0%, 100% { transform: rotate(8deg) translateY(0); }
-                50% { transform: rotate(2deg) translateY(-8px); }
+                0%, 100% { transform: translateX(40%) rotate(8deg); }
+                50% { transform: translateX(40%) rotate(2deg); }
               }
             `,
               }}
             />
 
-            <div className="pointer-events-none absolute -left-7 top-[-18px] z-10 md:left-4 md:top-[-20px]" style={{ animation: "weddingInviteFlowerLeft 4s ease-in-out infinite" }}>
-              <svg viewBox="0 0 120 120" className="h-24 w-24 md:h-28 md:w-28 drop-shadow-md" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M53 58 C34 70 18 78 2 80" stroke="#1A4A38" strokeWidth="5" strokeLinecap="round" />
-                <path d="M24 72 C13 59 16 47 31 50 C39 58 38 69 24 72Z" fill="#6A994E" stroke="#1A4A38" strokeWidth="2" />
-                <path d="M34 64 C31 48 40 39 52 49 C55 61 48 70 34 64Z" fill="#6A994E" stroke="#1A4A38" strokeWidth="2" />
-                <g transform="translate(67 47)">
-                  {Array.from({ length: 16 }).map((_, index) => (
-                    <ellipse key={index} cx="0" cy="-22" rx="7" ry="17" fill="#EED372" stroke="#B88A44" strokeWidth="1.4" transform={`rotate(${index * 22.5})`} />
-                  ))}
-                  <circle r="20" fill="#6B3A1F" stroke="#3A2216" strokeWidth="2" />
-                  <circle r="12" fill="#4A2618" stroke="#3A2216" strokeWidth="1.5" strokeDasharray="2 2" />
-                </g>
-              </svg>
+            <div className="pointer-events-none absolute left-0 top-[-26px] z-10 origin-bottom md:top-[-28px]" style={{ animation: "weddingInviteFlowerLeft 4s ease-in-out infinite" }}>
+              <SaveDateSunflower
+                side="left"
+                className="h-[104px] w-[78px] overflow-visible drop-shadow-sm md:h-[142px] md:w-[106px]"
+              />
             </div>
 
-            <div className="pointer-events-none absolute -right-7 top-[-18px] z-10 md:right-4 md:top-[-20px]" style={{ animation: "weddingInviteFlowerRight 4.3s ease-in-out infinite" }}>
-              <svg viewBox="0 0 120 120" className="h-24 w-24 md:h-28 md:w-28 drop-shadow-md" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M67 58 C86 70 102 78 118 80" stroke="#1A4A38" strokeWidth="5" strokeLinecap="round" />
-                <path d="M96 72 C107 59 104 47 89 50 C81 58 82 69 96 72Z" fill="#6A994E" stroke="#1A4A38" strokeWidth="2" />
-                <path d="M86 64 C89 48 80 39 68 49 C65 61 72 70 86 64Z" fill="#6A994E" stroke="#1A4A38" strokeWidth="2" />
-                <g transform="translate(53 47)">
-                  {Array.from({ length: 16 }).map((_, index) => (
-                    <ellipse key={index} cx="0" cy="-22" rx="7" ry="17" fill="#EED372" stroke="#B88A44" strokeWidth="1.4" transform={`rotate(${index * 22.5})`} />
-                  ))}
-                  <circle r="20" fill="#6B3A1F" stroke="#3A2216" strokeWidth="2" />
-                  <circle r="12" fill="#4A2618" stroke="#3A2216" strokeWidth="1.5" strokeDasharray="2 2" />
-                </g>
-              </svg>
+            <div className="pointer-events-none absolute right-0 top-[-26px] z-10 origin-bottom md:top-[-28px]" style={{ animation: "weddingInviteFlowerRight 4.3s ease-in-out infinite" }}>
+              <SaveDateSunflower
+                side="right"
+                className="h-[104px] w-[78px] overflow-visible drop-shadow-sm md:h-[142px] md:w-[106px]"
+              />
             </div>
 
             <p className="text-[#2E5B3D] font-sans text-xs md:text-sm tracking-[0.25em] uppercase mb-4">Wedding Invitation</p>
@@ -756,12 +762,12 @@ export function LandingPage() {
 
         {/* Our Love Story Section */}
         <div className="flex flex-col items-center justify-start bg-[#F9E9E7] px-8 py-16 sm:px-12 relative shrink-0 overflow-hidden gsap-fade-up">
-          {/* Random Spinning Stars (More Visible) */}
-          <AnimatedStarburst className="left-[5%] top-[12%] z-0 text-[#D95649]/45 text-6xl" delay={0.1} duration={6.4} />
-          <AnimatedStarburst className="right-[7%] top-[22%] z-0 text-[#F4C848]/80 text-7xl blur-[0.3px]" delay={0.7} duration={7.2} />
-          <AnimatedStarburst className="bottom-[16%] left-[8%] z-0 text-[#1A4A38]/25 text-5xl" delay={1.2} duration={6.8} />
-          <AnimatedStarburst className="bottom-[8%] right-[10%] z-0 text-[#842434]/28 text-6xl" delay={1.7} duration={7.8} />
-          <AnimatedStarburst className="left-[28%] top-[44%] z-0 text-[#D95649]/25 text-4xl" delay={2.1} duration={5.8} />
+          {/* Random Spinning Flowers (More Visible) */}
+          <SpinningFlower className="left-[5%] top-[12%] z-0 text-[#D95649]/45 text-6xl" delay={0.1} duration={6.4} />
+          <SpinningFlower className="right-[7%] top-[22%] z-0 text-[#F4C848]/80 text-7xl blur-[0.3px]" delay={0.7} duration={7.2} />
+          <SpinningFlower className="bottom-[16%] left-[8%] z-0 text-[#1A4A38]/25 text-5xl" delay={1.2} duration={6.8} />
+          <SpinningFlower className="bottom-[8%] right-[10%] z-0 text-[#842434]/28 text-6xl" delay={1.7} duration={7.8} />
+          <SpinningFlower className="left-[28%] top-[44%] z-0 text-[#D95649]/25 text-4xl" delay={2.1} duration={5.8} />
 
           <h2 className="relative z-10 mb-9 text-center font-serif italic text-5xl font-bold leading-none text-[#842434] sm:text-6xl">Our Love Story</h2>
 
@@ -897,46 +903,20 @@ export function LandingPage() {
                 className="absolute -left-[50px] -top-[11px] z-0 pointer-events-none origin-bottom md:-left-[78px] md:-top-[16px] lg:-left-[92px] lg:-top-[18px]"
                 style={{ animation: "swayLeft 4s ease-in-out infinite" }}
               >
-                <svg
-                  viewBox="0 0 80 100"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                <SaveDateSunflower
+                  side="left"
                   className="h-[104px] w-[78px] overflow-visible drop-shadow-sm md:h-[142px] md:w-[106px] lg:h-[164px] lg:w-[124px]"
-                >
-                  <path d="M 40,50 Q 50,80 35,100" fill="none" stroke="#1A4A38" strokeWidth="4" strokeLinecap="round" />
-                  <path d="M 42,70 Q 20,75 15,60 Q 25,50 40,60" fill="#6A994E" stroke="#1A4A38" strokeWidth="1.5" strokeLinejoin="round" />
-                  <path d="M 45,85 Q 65,90 70,75 Q 60,65 40,75" fill="#6A994E" stroke="#1A4A38" strokeWidth="1.5" strokeLinejoin="round" />
-                  <g transform="translate(40, 40)">
-                    {[...Array(12)].map((_, i) => (
-                      <path key={i} transform={`rotate(${i * 30})`} d="M 0,0 C 10,-15 10,-30 0,-35 C -10,-30 -10,-15 0,0" fill="#EED372" stroke="#B88A44" strokeWidth="1" />
-                    ))}
-                    <circle r="14" fill="#5B3A29" />
-                    <circle r="10" fill="#4A2A1A" stroke="#3A2216" strokeWidth="1" strokeDasharray="2 2" />
-                  </g>
-                </svg>
+                />
               </div>
 
               <div
                 className="absolute -right-[53px] top-[92px] z-0 pointer-events-none origin-bottom md:-right-[82px] md:top-[134px] lg:-right-[98px] lg:top-[158px]"
                 style={{ animation: "swayRight 4.5s ease-in-out infinite" }}
               >
-                <svg
-                  viewBox="0 0 80 100"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                <SaveDateSunflower
+                  side="right"
                   className="h-[104px] w-[78px] overflow-visible drop-shadow-sm md:h-[142px] md:w-[106px] lg:h-[164px] lg:w-[124px]"
-                >
-                  <path d="M 40,50 Q 30,80 45,100" fill="none" stroke="#1A4A38" strokeWidth="4" strokeLinecap="round" />
-                  <path d="M 38,70 Q 60,75 65,60 Q 55,50 40,60" fill="#6A994E" stroke="#1A4A38" strokeWidth="1.5" strokeLinejoin="round" />
-                  <path d="M 35,85 Q 15,90 10,75 Q 20,65 40,75" fill="#6A994E" stroke="#1A4A38" strokeWidth="1.5" strokeLinejoin="round" />
-                  <g transform="translate(40, 40)">
-                    {[...Array(12)].map((_, i) => (
-                      <path key={i} transform={`rotate(${i * 30})`} d="M 0,0 C 10,-15 10,-30 0,-35 C -10,-30 -10,-15 0,0" fill="#EED372" stroke="#B88A44" strokeWidth="1" />
-                    ))}
-                    <circle r="14" fill="#5B3A29" />
-                    <circle r="10" fill="#4A2A1A" stroke="#3A2216" strokeWidth="1" strokeDasharray="2 2" />
-                  </g>
-                </svg>
+                />
               </div>
 
               {[
@@ -1017,12 +997,12 @@ export function LandingPage() {
 
         {/* It's Wedding Day Section */}
         <div className="w-full bg-[#F9DB7A] flex flex-col items-center shrink-0 relative overflow-hidden gsap-fade-up">
-          {/* Random Spinning Stars (More Visible) */}
-          <AnimatedStarburst className="top-[14%] left-[5%] z-0 text-white/80 text-5xl blur-[0.3px]" delay={0.15} duration={6.2} />
-          <AnimatedStarburst className="top-[38%] right-[8%] z-0 text-white/60 text-7xl blur-[0.5px]" delay={0.75} duration={7.5} />
-          <AnimatedStarburst className="bottom-[20%] left-[10%] z-0 text-white/70 text-6xl" delay={1.25} duration={6.8} />
-          <AnimatedStarburst className="top-[58%] left-[2%] z-0 text-[#842434]/28 text-4xl" delay={1.7} duration={5.9} />
-          <AnimatedStarburst className="bottom-[10%] right-[5%] z-0 text-[#0E5B23]/30 text-5xl" delay={2.05} duration={7.9} />
+          {/* Random Spinning Flowers (More Visible) */}
+          <SpinningFlower className="top-[14%] left-[5%] z-0 text-white/80 text-5xl blur-[0.3px]" delay={0.15} duration={6.2} />
+          <SpinningFlower className="top-[38%] right-[8%] z-0 text-white/60 text-7xl blur-[0.5px]" delay={0.75} duration={7.5} />
+          <SpinningFlower className="bottom-[20%] left-[10%] z-0 text-white/70 text-6xl" delay={1.25} duration={6.8} />
+          <SpinningFlower className="top-[58%] left-[2%] z-0 text-[#842434]/28 text-4xl" delay={1.7} duration={5.9} />
+          <SpinningFlower className="bottom-[10%] right-[5%] z-0 text-[#0E5B23]/30 text-5xl" delay={2.05} duration={7.9} />
 
           {/* Top Checkerboard Border */}
           <div
@@ -1294,11 +1274,11 @@ export function LandingPage() {
 
         {/* Tanda Kasih / Bank Transfer Section */}
         <div className="w-full bg-[#F5F1E7] px-8 py-20 flex flex-col items-center shrink-0 relative overflow-hidden gsap-fade-up" style={{ fontFamily: "'Inter', sans-serif" }}>
-          {/* Random Spinning Stars (More Visible) */}
-          <AnimatedStarburst className="top-10 right-8 z-0 text-[#D95649]/35 text-[5rem]" delay={0.2} duration={6.8} />
-          <AnimatedStarburst className="bottom-16 left-4 z-0 text-[#A5C9A1]/50 text-[6rem]" delay={0.8} duration={7.6} />
-          <AnimatedStarburst className="top-[34%] left-8 z-0 text-[#F4C848]/60 text-5xl" delay={1.25} duration={6.1} />
-          <AnimatedStarburst className="bottom-10 right-[18%] z-0 text-[#97C1D9]/40 text-5xl" delay={1.8} duration={7.1} />
+          {/* Random Spinning Flowers (More Visible) */}
+          <SpinningFlower className="top-10 right-8 z-0 text-[#D95649]/35 text-[5rem]" delay={0.2} duration={6.8} />
+          <SpinningFlower className="bottom-16 left-4 z-0 text-[#A5C9A1]/50 text-[6rem]" delay={0.8} duration={7.6} />
+          <SpinningFlower className="top-[34%] left-8 z-0 text-[#F4C848]/60 text-5xl" delay={1.25} duration={6.1} />
+          <SpinningFlower className="bottom-10 right-[18%] z-0 text-[#97C1D9]/40 text-5xl" delay={1.8} duration={7.1} />
 
           <h2 className="relative z-10 text-[#D95649] font-serif italic text-6xl md:text-7xl font-bold mb-5 text-center leading-none">Tanda Kasih</h2>
 
@@ -1316,11 +1296,7 @@ export function LandingPage() {
               >
                 {BANK_ACCOUNTS.map((bank) => (
                   <option key={bank.id} value={bank.id}>
-                    {bank.name
-                      .toLowerCase()
-                      .split(" ")
-                      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                      .join(" ")}
+                    {bank.label}
                   </option>
                 ))}
               </select>
@@ -1333,7 +1309,7 @@ export function LandingPage() {
             <div className="w-full rounded-[60px] bg-[#D95649] p-[18px] shadow-[0_18px_34px_rgba(132,36,52,0.12)]">
               <div className="bg-white w-full rounded-[44px] flex flex-col items-center justify-center py-8 px-8">
                 <h3 className="text-[#D95649] text-2xl md:text-3xl font-serif font-semibold uppercase mb-3 text-center leading-none">
-                  {selectedBank.name} ({selectedBank.code})
+                  {selectedBank.name}{selectedBank.code ? ` (${selectedBank.code})` : ""}
                 </h3>
                 <p className="text-[#D95649] font-serif text-2xl md:text-3xl font-semibold mb-1 text-center leading-none">{selectedBank.accountNumber}</p>
                 <p className="text-[#D95649] font-serif text-2xl md:text-3xl font-semibold mb-8 text-center leading-none">{selectedBank.accountName}</p>
@@ -1421,7 +1397,14 @@ export function LandingPage() {
 
                     {/* Product Image */}
                     <div className={`w-40 h-40 mt-4 rounded-full overflow-hidden shadow-2xl border-[4px] border-white/20 ${isSoldOut ? "opacity-55 grayscale" : ""}`}>
-                      <img src={gift.image} alt={gift.name} className="w-full h-full object-cover" />
+                      <img
+                        src={getGiftImage(gift.image)}
+                        alt={gift.name}
+                        className="w-full h-full object-cover"
+                        onError={(event) => {
+                          event.currentTarget.src = DEFAULT_GIFT_IMAGE;
+                        }}
+                      />
                     </div>
                   </div>
 
@@ -1557,6 +1540,15 @@ export function LandingPage() {
           <div className="flex flex-col items-center gap-3 mb-10 relative z-10 text-center">
             <p className="text-[#EED372] font-sans text-xs font-bold uppercase tracking-[0.35em]">Powered By</p>
             <h2 className="text-[#F9E9E7] font-sans text-3xl md:text-4xl font-black uppercase tracking-widest">Hilmi Putra</h2>
+            <a
+              href="https://hilmi-putra-porto.vercel.app/"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 inline-flex items-center gap-2 rounded-full border border-[#F9E9E7]/20 bg-[#F9E9E7]/10 px-4 py-2 text-[#F9E9E7]/80 transition-colors hover:border-[#EED372]/50 hover:bg-[#EED372]/10 hover:text-[#EED372]"
+            >
+              <span className="font-sans text-xs font-semibold tracking-[0.14em]">Ruang Karya Digital</span>
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
           </div>
 
           <div className="w-full max-w-sm border-t-[3px] border-dashed border-[#F9E9E7]/20 mb-10"></div>
@@ -1627,7 +1619,14 @@ export function LandingPage() {
 
               <div className="px-6 mb-4">
                 <div className="w-full h-48 rounded-xl overflow-hidden border border-[#1A4A38]/10 bg-slate-100">
-                  <img src={selectedGiftDetail.image} alt={selectedGiftDetail.name} className="w-full h-full object-cover" />
+                  <img
+                    src={getGiftImage(selectedGiftDetail.image)}
+                    alt={selectedGiftDetail.name}
+                    className="w-full h-full object-cover"
+                    onError={(event) => {
+                      event.currentTarget.src = DEFAULT_GIFT_IMAGE;
+                    }}
+                  />
                 </div>
               </div>
 
@@ -1707,7 +1706,14 @@ export function LandingPage() {
                 </h3>
 
                 <div className="w-full h-40 rounded-xl overflow-hidden border border-[#1A4A38]/10 bg-slate-100 mb-4">
-                  <img src={selectedGiftForm.image} alt={selectedGiftForm.name} className="w-full h-full object-cover object-top" />
+                  <img
+                    src={getGiftImage(selectedGiftForm.image)}
+                    alt={selectedGiftForm.name}
+                    className="w-full h-full object-cover object-top"
+                    onError={(event) => {
+                      event.currentTarget.src = DEFAULT_GIFT_IMAGE;
+                    }}
+                  />
                 </div>
                 <div className="mb-6 flex items-start justify-between gap-3">
                   <div>

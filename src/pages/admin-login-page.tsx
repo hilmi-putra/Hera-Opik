@@ -33,7 +33,7 @@ export function AdminLoginPage() {
   return (
     <div className="mx-auto mt-16 w-full max-w-md rounded-lg border bg-white p-6 shadow-sm">
       <h1 className="text-xl font-semibold">Admin Login</h1>
-      <p className="mt-1 text-sm text-slate-600">Sign in using your Supabase account.</p>
+      <p className="mt-1 text-sm text-slate-600">Sign in using your Laravel admin account.</p>
       <form onSubmit={onSubmit} className="mt-4 space-y-3">
         <input
           type="email"

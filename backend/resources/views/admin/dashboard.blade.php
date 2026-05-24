@@ -82,5 +82,11 @@
             </table>
         </div>
     </div>
+    @if($recentRsvps->hasPages())
+    <div class="pagination-wrapper">
+        <div class="pagination-info">Menampilkan {{ $recentRsvps->firstItem() }}-{{ $recentRsvps->lastItem() }} dari {{ $recentRsvps->total() }}</div>
+        <div class="pagination">{{ $recentRsvps->links() }}</div>
+    </div>
+    @endif
 </div>
 @endsection

@@ -6,7 +6,6 @@ import App from "./App";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@/i18n";
-import { AppProvider } from "@/store/app-context";
 import { AuthProvider } from "@/store/auth-context";
 
 const queryClient = new QueryClient();
@@ -16,10 +15,8 @@ ReactDOM.createRoot(document.getElementById("app")!).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <AppProvider>
-            <App />
-            <Toaster richColors position="top-center" />
-          </AppProvider>
+          <App />
+          <Toaster richColors position="top-center" />
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
