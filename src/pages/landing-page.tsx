@@ -1059,7 +1059,7 @@ export function LandingPage() {
                 </div>
 
                 <a
-                  href="https://maps.app.goo.gl/GN6VYqoq1bckbU8X8"
+                  href="https://maps.app.goo.gl/Em1JC4NJMoUGVmjMA"
                   target="_blank"
                   rel="noreferrer"
                   className="mt-8 rounded-full bg-[#0E5B23] px-10 py-3 font-sans text-sm font-bold tracking-normal text-[#F9E9E7] shadow-[0_3px_0px_#073412] transition-all hover:bg-[#0A481A] active:translate-y-[2px] active:shadow-none md:mt-8 md:px-12 md:py-3.5 md:text-sm"
@@ -1371,7 +1371,7 @@ export function LandingPage() {
               <div className="bg-white w-full rounded-[36px] flex flex-col items-center justify-center py-10 px-8 relative overflow-hidden">
                 {/* Background decorative flower */}
                 <div className="absolute -bottom-10 -left-10 text-[#F5F1E7] text-[10rem] animate-[spin_20s_linear_infinite_reverse] pointer-events-none">✽</div>
-                
+
                 <h3 className="text-[#D34D41] text-xl font-serif font-bold tracking-widest mb-4 relative z-10 uppercase">{selectedBank.name}</h3>
                 <p className="text-[#D34D41] font-serif text-[28px] md:text-[32px] font-bold mb-2 text-center leading-none tracking-wide relative z-10">
                   {selectedBank.accountNumber}
