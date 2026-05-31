@@ -24,7 +24,7 @@ const loveStoryItems: LoveStoryItem[] = [
     frameColor: "#D95649",
     imagePosition: "center",
     content:
-      "Perjalanan kita terlalu panjang untuk sekadar diceritakan dengan kata-kata. Bagi kami, cinta bukan hanya tentang pertemuan awal, melainkan keputusan untuk memilih tetap tinggal saat keadaan terasa sulit. Sebagai dua manusia biasa yang penuh kekurangan, kami belajar bahwa takdir mempertemukan kita bukan hanya untuk singgah, tapi untuk saling menguatkan selamanya",
+      "Sejak tahun 2017, kami tumbuh dalam cerita yang sama. Dari satu kelas di SMA, satu kampus, hingga kini bekerja bersama. Kami belajar bahwa hubungan bukan tentang siapa yang selalu benar, tapi tentang siapa yang mau lebih dulu meredakan ego.",
   },
   {
     title: "Ujian & Bukti",
@@ -32,7 +32,7 @@ const loveStoryItems: LoveStoryItem[] = [
     frameColor: "#F1D56F",
     imagePosition: "center",
     content:
-      "Perjalanan ini tidak selalu mudah; ada air mata dan keraguan yang menguji keyakinan kami. Namun, kami memilih untuk bertahan karena doa yang tak putus dan hati yang terus memilih untuk berjuang. Kini, segala luka itu bermuara pada restu, mempersatukan dua keluarga dalam harapan yang sama.",
+      "Hubungan kami mungkin tidak dipenuhi kisah putus dan kembali. Tapi seperti hubungan lainnya, kami tetap bertemu lelah dan perbedaan. Hera dengan segala rencananya, lalu Taufik yang selalu sabar menenangkan dan membantu mewujudkannya.",
   },
   {
     title: "Kisah & Keyakinan",
@@ -40,7 +40,7 @@ const loveStoryItems: LoveStoryItem[] = [
     frameColor: "#94CFE2",
     imagePosition: "center",
     content:
-      "Kami percaya bahwa setiap doa akan dijawab pada waktu terbaik-Nya. Dengan penuh syukur, kami menantikan hari sakral saat dua jiwa dipersatukan dalam ikatan suci.",
+      "Semakin dewasa, kami semakin yakin bahwa tumbuh bersama adalah bentuk cinta yang paling indah. Karena selama ini, hampir semua langkah selalu dijalani berdua, hingga akhirnya kami percaya bahwa rumah memang telah kami temukan satu sama lain.",
   },
   {
     title: "Merayakan Takdir Ini",
@@ -48,7 +48,7 @@ const loveStoryItems: LoveStoryItem[] = [
     frameColor: "#9DCB9C",
     imagePosition: "center",
     content:
-      "Sebentar lagi, perjalanan kami akan melangkah ke babak baru, menyatukan dua hati dalam satu tujuan di bawah naungan cinta-Nya. Mohon doa restunya, agar setiap langkah kami ke depan selalu dipeluk oleh lembutnya takdir dan diberkahi kebahagiaan yang takkan lekang oleh waktu.",
+      "Setelah melewati masa remaja hingga dewasa bersama, kami memutuskan untuk melanjutkan hidup dan ibadah ini dalam satu perjalanan yang sama. Karena selama ini, hampir semua cerita selalu dijalani berdua. Maka kini, dengan penuh syukur, kami ingin merayakan takdir yang sejak lama diam-diam sedang menuntun kami menuju hari ini.",
   },
 ];
 
@@ -351,7 +351,6 @@ export function LandingPage() {
 
   const giftCarouselRef = useRef<HTMLDivElement>(null);
   const [giftScroll, setGiftScroll] = useState({ left: 0, width: 33 });
-
   const handleGiftScroll = () => {
     if (!giftCarouselRef.current) return;
     const el = giftCarouselRef.current;
@@ -365,28 +364,26 @@ export function LandingPage() {
   };
 
   const galleryImages = [
-    { src: "/Gallery/CMZ_3989.jpg", title: "Portrait 1" },
-    { src: "/Gallery/CMZ_4003.jpg", title: "Portrait 2" },
-    { src: "/Gallery/CMZ_4028.jpg", title: "Portrait 3" },
-    { src: "/Gallery/CMZ_4050.jpg", title: "Portrait 4" },
-    { src: "/Gallery/CMZ_4051.jpg", title: "Portrait 5" },
-    { src: "/Gallery/CMZ_4069.jpg", title: "Portrait 6" },
-    { src: "/Gallery/CMZ_4130.jpg", title: "Portrait 7" },
-    { src: "/Gallery/CMZ_4152.jpg", title: "Portrait 8" },
-    { src: "/Gallery/CMZ_4315.jpg", title: "Portrait 9" },
-    { src: "/Gallery/CMZ_4354.jpg", title: "Portrait 10" },
-    { src: "/Gallery/CMZ_4365.jpg", title: "Portrait 11" },
-    { src: "/Gallery/CMZ_4375.jpg", title: "Portrait 12" },
-    { src: "/Gallery/CMZ_4478.jpg", title: "Portrait 13" },
-    { src: "/Gallery/CMZ_4533.jpg", title: "Portrait 14" },
-    { src: "/Gallery/CMZ_4561.jpg", title: "Portrait 15" },
-    { src: "/Gallery/CMZ_4602.jpg", title: "Portrait 16" },
-    { src: "/Gallery/CMZ_4640.jpg", title: "Portrait 17" },
-    { src: "/Gallery/CMZ_4669.jpg", title: "Portrait 18" },
-    { src: "/Gallery/CMZ_4673.jpg", title: "Portrait 19" },
-    { src: "/Gallery/CMZ_4704.jpg", title: "Portrait 20" },
-    { src: "/Gallery/CMZ_4717.jpg", title: "Portrait 21" },
-    { src: "/Gallery/CMZ_4719.jpg", title: "Portrait 22" },
+    { src: "/Gallery/wedding-gallery/Artboard 1.jpg", title: "Portrait 1" },
+    { src: "/Gallery/wedding-gallery/Artboard 2.jpg", title: "Portrait 2" },
+    { src: "/Gallery/wedding-gallery/Artboard 3.jpg", title: "Portrait 3" },
+    { src: "/Gallery/wedding-gallery/Artboard 4.jpg", title: "Portrait 4" },
+    { src: "/Gallery/wedding-gallery/Artboard 5.jpg", title: "Portrait 5" },
+    { src: "/Gallery/wedding-gallery/Artboard 6.jpg", title: "Portrait 6" },
+    { src: "/Gallery/wedding-gallery/Artboard 7.jpg", title: "Portrait 7" },
+    { src: "/Gallery/wedding-gallery/Artboard 8.jpg", title: "Portrait 8" },
+    { src: "/Gallery/wedding-gallery/Artboard 9.jpg", title: "Portrait 9" },
+    { src: "/Gallery/wedding-gallery/Artboard 10.jpg", title: "Portrait 10" },
+    { src: "/Gallery/wedding-gallery/Artboard 11.jpg", title: "Portrait 11" },
+    { src: "/Gallery/wedding-gallery/Artboard 12.jpg", title: "Portrait 12" },
+    { src: "/Gallery/wedding-gallery/Artboard 13.jpg", title: "Portrait 13" },
+    { src: "/Gallery/wedding-gallery/Artboard 14.jpg", title: "Portrait 14" },
+    { src: "/Gallery/wedding-gallery/Artboard 15.jpg", title: "Portrait 15" },
+    { src: "/Gallery/wedding-gallery/Artboard 16.jpg", title: "Portrait 16" },
+    { src: "/Gallery/wedding-gallery/Artboard 17.jpg", title: "Portrait 17" },
+    { src: "/Gallery/wedding-gallery/Artboard 18.jpg", title: "Portrait 18" },
+    { src: "/Gallery/wedding-gallery/Artboard 19.jpg", title: "Portrait 19" },
+    { src: "/Gallery/wedding-gallery/Artboard 20.jpg", title: "Portrait 20" },
   ];
 
   const handleScroll = () => {
@@ -663,7 +660,7 @@ export function LandingPage() {
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {/* Content Container */}
-        <div className="flex flex-col items-center justify-start min-h-full px-3 py-12 sm:px-8 sm:py-14 lg:py-8">
+        <div className="flex flex-col items-center justify-start min-h-full px-2 py-12 sm:px-8 sm:py-14 lg:py-8">
           {/* Top Scalloped Image Frame */}
           <div className="relative w-full max-w-[520px] lg:max-w-[500px] xl:max-w-[520px] mx-auto mb-8 lg:mb-7 px-0 gsap-fade-up">
             {/* Spinning Flowers Decorations for right panel */}
@@ -673,7 +670,7 @@ export function LandingPage() {
             {/* Using the pre-cut image instead of CSS mask */}
             <img
               src="/images/image2.png"
-              className="w-full h-auto max-h-[46vh] lg:max-h-[47vh] xl:max-h-[49vh] object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.15)] relative z-0"
+              className="w-full h-auto object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.15)] relative z-0 lg:max-h-[47vh] xl:max-h-[49vh]"
               alt="Hera & Taufik Studio"
             />
           </div>
@@ -1031,24 +1028,24 @@ export function LandingPage() {
               <div className="relative z-10 flex flex-col items-center">
                 {/* Akad Section (Interlocking Rings) */}
                 <div className="flex flex-col items-center">
-                  <h3 className="mb-6 font-serif italic text-[28px] font-bold tracking-tight text-[#842434] md:mb-7 md:text-[30px] lg:text-[34px]">Akad Nikah</h3>
+                  <h3 className="mb-6 font-serif italic text-[28px] font-bold tracking-tight text-[#842434] md:mb-7 md:text-[30px] lg:text-[34px]">Akad Ceremony</h3>
                   <img src="/assets/rings.png" alt="Wedding rings" className="mb-2 h-[58px] w-[78px] object-contain md:mb-3 md:h-[60px] md:w-20 lg:h-[66px] lg:w-[88px]" />
                   <span className="mb-2 font-serif text-lg italic text-[#1A4A38] md:text-lg">Sunday</span>
                   <span className="mb-2 font-serif text-7xl font-black leading-none text-[#842434] md:text-8xl lg:text-9xl" style={{ WebkitTextStroke: "1px #842434" }}>
                     14
                   </span>
                   <span className="mb-2 font-serif text-lg italic text-[#1A4A38] md:text-lg">June, 2026</span>
-                  <span className="font-sans text-base font-bold tracking-tight text-[#842434] md:text-lg">08.00 - 10.00</span>
+                  <span className="font-sans text-base font-bold tracking-tight text-[#842434] md:text-lg">08.00 AM – 10.00 AM</span>
                 </div>
 
                 {/* Resepsi Section (Toasting Glasses) */}
                 <div className="mt-12 flex flex-col items-center md:mt-10">
                   <img src="/assets/party.png" alt="Party celebration" className="mb-2 h-[72px] w-[72px] object-contain md:mb-3 md:h-[78px] md:w-[78px] lg:h-[86px] lg:w-[86px]" />
                   <span className="mb-1 font-serif text-lg italic text-[#1A4A38] md:text-lg">Sunday</span>
-                  <h3 className="mb-2 font-serif italic text-[30px] font-bold leading-none tracking-tight text-[#0E5B23] md:text-[34px] lg:text-[38px]">Resepsi</h3>
+                  <h3 className="mb-2 font-serif italic text-[30px] font-bold leading-none tracking-tight text-[#0E5B23] md:text-[34px] lg:text-[38px]">Wedding Resepsion</h3>
                   <span className="mb-2 font-serif text-7xl font-black leading-none text-[#842434] md:text-8xl lg:text-9xl">14</span>
                   <span className="mb-2 font-serif text-lg italic text-[#1A4A38] md:text-lg">June, 2026</span>
-                  <span className="mb-6 font-sans text-base font-bold tracking-tight text-[#842434] md:mb-5 md:text-lg">11.00 - 14.00</span>
+                  <span className="mb-6 font-sans text-base font-bold tracking-tight text-[#842434] md:mb-5 md:text-lg">10.30 AM – 02.00 PM</span>
                 </div>
 
                 {/* Location Section */}
@@ -1068,6 +1065,45 @@ export function LandingPage() {
                 >
                   View Maps
                 </a>
+              </div>
+            </div>
+
+            {/* Rundown Section */}
+            <div className="mt-16 flex w-full flex-col items-center">
+              <h2 className="mb-6 font-serif italic text-[48px] font-bold leading-[0.9] tracking-tight text-[#842434] md:mb-7 md:text-[60px] lg:text-[64px]">
+                Rundown
+              </h2>
+
+              <div className="w-full max-w-[350px] rounded-[32px] bg-[#FFF8E7] px-6 py-10 md:max-w-[480px] md:px-10 lg:py-12 shadow-sm relative z-10">
+                <div className="flex flex-col gap-6 md:gap-8 relative">
+                  {/* Vertical Dashed Line */}
+                  <div className="absolute left-[87px] top-2 bottom-2 w-[3px] border-l-[2.5px] border-dashed border-[#EE6E89] md:left-[106px]"></div>
+
+                  {[
+                    { time: "08.00 AM", event: "Akad Ceremony" },
+                    { time: "10.30 AM", event: "Bride & Groom Entrance" },
+                    { time: "11.00 AM", event: "Cake Ceremony" },
+                    { time: "11.30 AM", event: "Warm Moments Together" },
+                    { time: "12.30 PM", event: "Flashmob Time" },
+                    { time: "12.50 PM", event: "Games & Karaoke" },
+                    { time: "02.00 PM", event: "End of Celebration 🤍" }
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center relative z-10 w-full">
+                      <div className="w-[65px] shrink-0 text-right md:w-[80px]">
+                        <span className="font-serif text-[13px] font-bold text-[#0E5B23] md:text-[16px]">{item.time}</span>
+                      </div>
+
+                      {/* Circle on dashed line */}
+                      <div className="mx-4 flex w-3 shrink-0 items-center justify-center md:mx-5">
+                        <div className="h-[14px] w-[14px] rounded-full border-[2.5px] border-[#EE6E89] bg-[#FFF8E7]"></div>
+                      </div>
+
+                      <div className="flex-1">
+                        <span className="font-serif text-[14px] font-semibold text-[#1A4A38] md:text-[17px]">{item.event}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -1272,65 +1308,8 @@ export function LandingPage() {
           </div>
         </div>
 
-        {/* Tanda Kasih / Bank Transfer Section */}
-        <div className="w-full bg-[#F5F1E7] px-8 py-20 flex flex-col items-center shrink-0 relative overflow-hidden gsap-fade-up" style={{ fontFamily: "'Inter', sans-serif" }}>
-          {/* Random Spinning Flowers (More Visible) */}
-          <SpinningFlower className="top-10 right-8 z-0 text-[#D95649]/35 text-[5rem]" delay={0.2} duration={6.8} />
-          <SpinningFlower className="bottom-16 left-4 z-0 text-[#A5C9A1]/50 text-[6rem]" delay={0.8} duration={7.6} />
-          <SpinningFlower className="top-[34%] left-8 z-0 text-[#F4C848]/60 text-5xl" delay={1.25} duration={6.1} />
-          <SpinningFlower className="bottom-10 right-[18%] z-0 text-[#97C1D9]/40 text-5xl" delay={1.8} duration={7.1} />
-
-          <h2 className="relative z-10 text-[#D95649] font-serif italic text-6xl md:text-7xl font-bold mb-5 text-center leading-none">Tanda Kasih</h2>
-
-          <p className="relative z-10 text-[#D95649] font-sans text-sm md:text-base text-center max-w-[460px] mb-6 leading-snug">
-            Atas restu dan kedatangan kamu ke pesta pernikahan kami sudah cukup bagi kami. Jika kamu ingin memberi hadiah, kami menyediakan amplop digital untuk memudahkan kamu.
-          </p>
-
-          <div className="relative z-10 w-full max-w-[500px] flex flex-col items-center gap-5">
-            {/* Dropdown Select */}
-            <div className="w-full max-w-[372px] relative">
-              <select
-                value={selectedBankId}
-                onChange={(e) => setSelectedBankId(e.target.value)}
-                className="w-full appearance-none bg-[#F4DA76] border-[1.5px] border-[#1A4A38] text-[#1A4A38] py-2.5 px-6 rounded-full font-serif italic text-xl leading-none shadow-[0_2px_0_rgba(26,74,56,0.18)] focus:outline-none focus:ring-4 focus:ring-[#D95649]/20 cursor-pointer"
-              >
-                {BANK_ACCOUNTS.map((bank) => (
-                  <option key={bank.id} value={bank.id}>
-                    {bank.label}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-6 flex items-center pointer-events-none text-[#1A4A38]">
-                <span className="h-0 w-0 border-x-[10px] border-t-[15px] border-x-transparent border-t-[#1A4A38]" />
-              </div>
-            </div>
-
-            {/* Bank Card */}
-            <div className="w-full rounded-[60px] bg-[#D95649] p-[18px] shadow-[0_18px_34px_rgba(132,36,52,0.12)]">
-              <div className="bg-white w-full rounded-[44px] flex flex-col items-center justify-center py-8 px-8">
-                <h3 className="text-[#D95649] text-2xl md:text-3xl font-serif font-semibold uppercase mb-3 text-center leading-none">
-                  {selectedBank.name}{selectedBank.code ? ` (${selectedBank.code})` : ""}
-                </h3>
-                <p className="text-[#D95649] font-serif text-2xl md:text-3xl font-semibold mb-1 text-center leading-none">{selectedBank.accountNumber}</p>
-                <p className="text-[#D95649] font-serif text-2xl md:text-3xl font-semibold mb-8 text-center leading-none">{selectedBank.accountName}</p>
-
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(selectedBank.accountNumber);
-                    setAlertInfo({ title: "Berhasil", message: "Nomor rekening berhasil disalin!" });
-                  }}
-                  className="w-full max-w-[400px] bg-[#A9C9A4] hover:bg-[#9ABF95] text-white py-4 rounded-full flex items-center justify-center gap-2 font-medium text-base transition-colors shadow-[3px_4px_0_rgba(132,36,52,0.16)] active:translate-y-[2px] active:shadow-[1px_2px_0_rgba(132,36,52,0.16)]"
-                >
-                  <Copy className="h-5 w-5" />
-                  Salin Nomor Rekening
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Gift Recommendation Section */}
-        <div className="w-full bg-[#F5F1E7] py-24 px-6 flex flex-col items-center shrink-0 relative overflow-hidden gsap-fade-up">
+        {/* Send us a gift Section */}
+        <div className="w-full bg-[#F5F1E7] py-20 px-6 flex flex-col items-center shrink-0 relative overflow-hidden gsap-fade-up" style={{ fontFamily: "'Inter', sans-serif" }}>
           {/* Random Spinning Flowers */}
           <div className="absolute top-10 right-10 text-[#D34D41]/30 text-[6rem] animate-[spin_14s_linear_infinite_reverse]">✽</div>
           <div className="absolute bottom-20 left-5 text-[#A5C9A1]/40 text-[7rem] animate-[spin_20s_linear_infinite]">✽</div>
@@ -1338,14 +1317,48 @@ export function LandingPage() {
           <div className="absolute top-32 left-1/4 text-[#97C1D9]/40 text-6xl animate-[spin_8s_linear_infinite_reverse]">✽</div>
           <div className="absolute bottom-10 right-1/3 text-[#E87A84]/30 text-[4rem] animate-[spin_12s_linear_infinite]">✽</div>
 
-          <div className="w-full max-w-4xl">
-            <h2 className="text-[#D34D41] font-serif italic text-4xl md:text-5xl font-bold mb-10 text-left px-2">Send us a gift</h2>
+          <div className="relative z-10 w-full max-w-4xl flex flex-col items-center mb-16">
+            <h2 className="text-[#D34D41] font-serif italic text-6xl md:text-7xl font-bold mb-3 text-center leading-none">Send us a gift</h2>
+            <p className="text-[#D34D41]/70 font-sans text-sm md:text-base text-center max-w-[460px] leading-snug">
+              Silahkan Kirimkan Hadiah Kepada<br />Kedua Mempelai
+            </p>
+
+            {/* Address Card */}
+            <div className="mt-8 w-full max-w-[500px] rounded-[48px] bg-[#EE8198] p-4 md:p-5 shadow-sm">
+              <div className="bg-white w-full rounded-[36px] flex flex-col items-center justify-center py-8 px-6 md:px-10">
+                <h3 className="text-[#D34D41] text-[22px] md:text-2xl font-serif font-bold mb-1 text-center leading-none">
+                  Hera Nurimani
+                </h3>
+                <p className="text-[#D34D41] font-serif text-[22px] md:text-2xl font-bold mb-6 text-center leading-none">
+                  089655986299
+                </p>
+                <p className="text-[#D34D41]/70 font-sans text-[11px] md:text-xs font-medium text-center leading-relaxed mb-8 max-w-[300px]">
+                  Sindang Kasih RT/04 RW/08 Desa Sindangpakuon<br />
+                  Masuk Gang dekat tahu hj.ateng (No Rumah 32)<br />
+                  Kec. Cimanggung, Kab. Sumedang, Jawa Barat. ID 45364.
+                </p>
+
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText("Hera Nurimani\n089655986299\nSindang Kasih RT/04 RW/08 Desa Sindangpakuon\nMasuk Gang dekat tahu hj.ateng (No Rumah 32)\nKec. Cimanggung, Kab. Sumedang, Jawa Barat. ID 45364.");
+                    setAlertInfo({ title: "Berhasil", message: "Alamat berhasil disalin!" });
+                  }}
+                  className="w-full max-w-[400px] bg-[#D34D41] hover:bg-[#C24135] text-white py-4 rounded-full flex items-center justify-center gap-2 font-sans font-medium text-sm md:text-base transition-colors shadow-[0_3px_0_rgba(132,36,52,0.16)] active:translate-y-[2px] active:shadow-none"
+                >
+                  Copy Address
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full max-w-4xl relative z-10">
+            <h3 className="text-[#D34D41] font-serif italic text-3xl md:text-4xl font-bold mb-8 text-left px-2">Gift Recommendations</h3>
           </div>
 
           <div
             ref={giftCarouselRef}
             onScroll={handleGiftScroll}
-            className="flex gap-6 overflow-x-auto w-full max-w-4xl pb-8 px-2 snap-x snap-mandatory justify-start"
+            className="flex gap-6 overflow-x-auto w-full max-w-4xl pb-8 px-2 snap-x snap-mandatory justify-start relative z-10"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {giftRecommendations.map((gift) => {
@@ -1493,38 +1506,62 @@ export function LandingPage() {
         <div className="w-full bg-[#F5F1E7] py-16 flex flex-col items-center shrink-0 relative overflow-hidden">
           <h2 className="text-[#D05244] font-serif italic text-5xl font-black mb-8 z-10">Ucapan & Harapan</h2>
 
-          <div className="w-full relative overflow-hidden group">
+          <div className="w-full relative overflow-hidden">
             {/* Left and Right Gradient Fades */}
             <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-[#F5F1E7] to-transparent z-10 pointer-events-none" />
             <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-[#F5F1E7] to-transparent z-10 pointer-events-none" />
 
             {wishes.length > 0 ? (
-              <div
-                className="flex gap-4 px-16 animate-[scroll_40s_linear_infinite] hover:[animation-play-state:paused] whitespace-nowrap overflow-x-auto no-scrollbar"
-                style={{ width: "max-content" }}
-              >
-                {/* Duplicate the list 3 times for a smooth infinite loop effect */}
-                {[...wishes, ...wishes, ...wishes].map((wish, idx) => (
-                  <div key={`${wish.id}-${idx}`} className="w-[300px] md:w-[350px] shrink-0 bg-white rounded-2xl p-6 shadow-sm border border-[#842434]/5 flex flex-col whitespace-normal">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <h4 className="font-sans font-bold text-[#1A4A38] text-base">{wish.name}</h4>
-                        <span className="text-xs text-slate-400 font-medium">{wish.date}</span>
+              <div className="w-full overflow-x-auto overscroll-x-contain snap-x snap-mandatory pb-4 wishes-horizontal-scroll">
+                <div className="flex w-max gap-4 px-6 md:px-16">
+                  {wishes.map((wish) => (
+                    <div key={wish.id} className="w-[300px] md:w-[350px] shrink-0 snap-start bg-white rounded-2xl p-6 shadow-sm border border-[#842434]/5 flex flex-col whitespace-normal">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h4 className="font-sans font-bold text-[#1A4A38] text-base">{wish.name}</h4>
+                          <span className="text-xs text-slate-400 font-medium">{wish.date}</span>
+                        </div>
+                        <span
+                          className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider ${wish.status === "attending" ? "bg-[#1A4A38]/10 text-[#1A4A38]" : "bg-slate-100 text-slate-500"}`}
+                        >
+                          {wish.status === "attending" ? "Hadir" : "Tidak Hadir"}
+                        </span>
                       </div>
-                      <span
-                        className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider ${wish.status === "attending" ? "bg-[#1A4A38]/10 text-[#1A4A38]" : "bg-slate-100 text-slate-500"}`}
-                      >
-                        {wish.status === "attending" ? "Hadir" : "Tidak Hadir"}
-                      </span>
+                      <p className="text-slate-600 font-sans text-sm leading-relaxed italic">"{wish.message}"</p>
                     </div>
-                    <p className="text-slate-600 font-sans text-sm leading-relaxed italic">"{wish.message}"</p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             ) : (
               <p className="text-center text-slate-400 font-sans italic text-sm">Belum ada ucapan.</p>
             )}
           </div>
+        </div>
+
+        {/* Full Photo End Section */}
+        <div className="w-full h-[100vh] relative flex flex-col items-center justify-start overflow-hidden shrink-0 gsap-fade-up">
+          {/* Background Image */}
+          <div className="absolute inset-0 w-full h-full">
+            <img src="/images/CMZ_4069.jpg" className="w-full h-full object-cover object-center" alt="Hera & Taufik" />
+            <div className="absolute inset-0 bg-black/10" />
+          </div>
+
+          {/* Text Overlay */}
+          <div className="relative z-10 w-full h-full flex flex-col justify-start px-8 pb-20">
+            <div className="mt-[12vh] mb-0 text-white text-center drop-shadow-xl flex flex-col items-center">
+              <p className="font-sans uppercase tracking-[0.2em] text-xs md:text-sm mb-4 font-bold">The Wedding Of</p>
+              <h1 className="font-serif text-6xl md:text-7xl mb-4 leading-none">
+                Hera &<br />
+                Taufik
+              </h1>
+              <p className="font-sans font-bold tracking-widest text-sm md:text-base">#meRAyakanTAKdir</p>
+            </div>
+          </div>
+
+          {/* Spinning Flowers */}
+          <SpinningFlower className="top-[16%] -left-3 opacity-95 drop-shadow-md" color="#F75B42" size={58} rotate={12} />
+          <SpinningFlower className="top-[25%] -right-3 opacity-90 drop-shadow-md" color="#F4C848" size={44} delay={0.6} duration={6.2} rotate={-12} />
+          <SpinningFlower className="bottom-[28%] left-[7%] opacity-95 drop-shadow-md" color="#F75B42" size={42} delay={1.1} duration={7.4} rotate={45} />
         </div>
 
         {/* Footer Section */}
@@ -1546,7 +1583,7 @@ export function LandingPage() {
               rel="noreferrer"
               className="mt-2 inline-flex items-center gap-2 rounded-full border border-[#F9E9E7]/20 bg-[#F9E9E7]/10 px-4 py-2 text-[#F9E9E7]/80 transition-colors hover:border-[#EED372]/50 hover:bg-[#EED372]/10 hover:text-[#EED372]"
             >
-              <span className="font-sans text-xs font-semibold tracking-[0.14em]">Ruang Karya Digital</span>
+              <span className="font-sans text-xs font-semibold tracking-[0.14em]">#MeRAyakanTAKDIR Versi Kamu</span>
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
           </div>
