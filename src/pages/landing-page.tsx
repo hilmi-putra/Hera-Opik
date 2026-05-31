@@ -316,6 +316,7 @@ export function LandingPage() {
   }).toString()}`;
 
   const [selectedBankId, setSelectedBankId] = useState("dana");
+  const [isBankDropdownOpen, setIsBankDropdownOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isComing, setIsComing] = useState<boolean | null>(null);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
@@ -1304,6 +1305,96 @@ export function LandingPage() {
                   </button>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* Tanda Kasih Section */}
+        <div className="w-full bg-[#F5F1E7] py-20 px-6 flex flex-col items-center shrink-0 relative overflow-hidden gsap-fade-up">
+          {/* Random Spinning Flowers */}
+          <div className="absolute top-10 right-10 text-[#D34D41]/30 text-[6rem] animate-[spin_14s_linear_infinite_reverse]">✽</div>
+          <div className="absolute bottom-20 left-5 text-[#EED372]/40 text-[7rem] animate-[spin_20s_linear_infinite]">✽</div>
+          <div className="absolute top-1/3 left-10 text-[#E87A84]/20 text-5xl animate-[spin_10s_linear_infinite]">✽</div>
+
+          <div className="relative z-10 w-full max-w-xl flex flex-col items-center">
+            <h2 className="text-[#D34D41] font-serif italic text-6xl md:text-7xl font-bold mb-6 text-center leading-none">Tanda Kasih</h2>
+            <p className="text-[#D34D41]/80 font-sans text-sm md:text-base text-center leading-relaxed mb-8 max-w-[400px]">
+              Atas restu dan kedatangan kamu ke pesta pernikahan kami sudah cukup bagi kami. Jika kamu ingin memberi hadiah, kami menyediakan amplop digital untuk memudahkan kamu.
+            </p>
+
+            {/* Bank Dropdown Box */}
+            <div className="relative w-full max-w-[320px] mb-8 z-20">
+              <button
+                type="button"
+                onClick={() => setIsBankDropdownOpen(!isBankDropdownOpen)}
+                className="w-full bg-[#EED372] border-[2px] border-[#1A4A38] rounded-full px-6 py-4 flex items-center justify-between shadow-sm cursor-pointer transition-colors hover:bg-[#F4DA76]"
+              >
+                <span className="font-serif italic text-[#1A4A38] text-xl">{selectedBank.label}</span>
+                <motion.svg
+                  animate={{ rotate: isBankDropdownOpen ? 180 : 0 }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                  width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A4A38" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </motion.svg>
+              </button>
+
+              <AnimatePresence>
+                {isBankDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-[#F9E9E7] border-[2px] border-[#1A4A38] rounded-2xl overflow-hidden shadow-lg flex flex-col z-30"
+                  >
+                    {BANK_ACCOUNTS.map((bank) => (
+                      <button
+                        key={bank.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedBankId(bank.id);
+                          setIsBankDropdownOpen(false);
+                        }}
+                        className={`w-full px-6 py-3.5 text-left font-serif italic text-xl transition-colors border-b-[2px] border-[#1A4A38] last:border-b-0 ${selectedBank.id === bank.id ? "bg-[#1A4A38] text-[#F9E9E7]" : "text-[#1A4A38] hover:bg-[#EED372]"}`}
+                      >
+                        {bank.label}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Bank Card (Similar to Address Card in styling) */}
+            <div className="w-full max-w-[380px] rounded-[48px] bg-[#D34D41] p-4 shadow-md relative z-10">
+              <div className="bg-white w-full rounded-[36px] flex flex-col items-center justify-center py-10 px-8 relative overflow-hidden">
+                {/* Background decorative flower */}
+                <div className="absolute -bottom-10 -left-10 text-[#F5F1E7] text-[10rem] animate-[spin_20s_linear_infinite_reverse] pointer-events-none">✽</div>
+                
+                <h3 className="text-[#D34D41] text-xl font-serif font-bold tracking-widest mb-4 relative z-10 uppercase">{selectedBank.name}</h3>
+                <p className="text-[#D34D41] font-serif text-[28px] md:text-[32px] font-bold mb-2 text-center leading-none tracking-wide relative z-10">
+                  {selectedBank.accountNumber}
+                </p>
+                <h3 className="text-[#D34D41] text-xl font-serif font-medium mb-8 text-center relative z-10">
+                  {selectedBank.accountName}
+                </h3>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(selectedBank.accountNumber);
+                    setAlertInfo({ title: "Berhasil", message: `Nomor ${selectedBank.label} berhasil disalin!` });
+                  }}
+                  className="w-full bg-[#A5C9A1] hover:bg-[#94B890] text-white py-3.5 rounded-full flex items-center justify-center gap-2 font-sans font-bold text-sm transition-colors shadow-[0_3px_0_rgba(132,36,52,0.1)] active:translate-y-[2px] active:shadow-none relative z-10 border-[2px] border-[#1A4A38]"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  Salin Nomor Rekening
+                </button>
+              </div>
             </div>
           </div>
         </div>
